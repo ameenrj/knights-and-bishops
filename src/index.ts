@@ -1,7 +1,15 @@
 import * as readline from 'readline-sync'
 
-const NUMBER_OF_ROWS: number = 8
-const NUMBER_OF_COLUMNS: number = 8
+export const ChessConfig = {
+  board: {
+    NUMBER_OF_ROWS: 8,
+    NUMBER_OF_COLUMNS: 8
+  },
+  pieces: {
+    BISHOP_KEY: 'b',
+    KNIGHT_KEY: 'n'
+  }
+}
 
 const main = () => {
   do {
@@ -33,8 +41,8 @@ const main = () => {
 const getValidMoves = (piece: Piece, pieces: Piece[]) => {
   const moves: String[] = []
 
-  for (let col = 1; col <= NUMBER_OF_COLUMNS; col++) {
-    for (let row = 1; row <= NUMBER_OF_ROWS; row++) {
+  for (let col = 1; col <= ChessConfig.board.NUMBER_OF_COLUMNS; col++) {
+    for (let row = 1; row <= ChessConfig.board.NUMBER_OF_ROWS; row++) {
       if (isValidMove[piece.type](row, col, piece, pieces)) {
         moves.push(`${String.fromCharCode(96 + col)}${row}`)
       }
@@ -45,21 +53,28 @@ const getValidMoves = (piece: Piece, pieces: Piece[]) => {
 }
 
 const isValidMove = {
-  'b': (row, col, piece: Piece, pieces: Piece[]) => {
-    const onOwnPosition = row === piece.row && col === piece.col
+  [ChessConfig.pieces.BISHOP_KEY]: (row, col, piece: Piece, pieces: Piece[]) => {
+    const onCurrentPiece = row === piece.row && col === piece.col
+    const onAnotherSameColour = isValidMove.onAnotherSameColour(row, col, piece, pieces)
 
-    return ((row - piece.row === piece.col - col) ||
-      (piece.row - row === piece.col - col)) &&
-      !onOwnPosition
+    return ((row - piece.row === piece.col - col) || // top left to bottom right
+      (piece.row - row === piece.col - col)) && // bottom left to top right
+      (!onAnotherSameColour && !onCurrentPiece)
   },
-  'n': (row, col, piece: Piece, pieces: Piece[]) => {
+  [ChessConfig.pieces.KNIGHT_KEY]: (row, col, piece: Piece, pieces: Piece[]) => {
     const rowDifference = Math.abs(row - piece.row)
     const colDifference = Math.abs(col - piece.col)
-    const onAnotherSameColour = pieces.find(p => (p.row === row && p.col === col) && p.colour === piece.colour)
+    const onAnotherSameColour = isValidMove.onAnotherSameColour(row, col, piece, pieces)
 
     return (rowDifference + colDifference === 3) &&
       (rowDifference > 0 && colDifference > 0) &&
       !onAnotherSameColour
+  },
+  onAnotherSameColour: (row: number, col: number, piece: Piece, pieces: Piece[]) => {
+    const onCurrentPiece = row === piece.row && col === piece.col
+    if (onCurrentPiece) return false
+
+    return !!(pieces.find(p => (p.row === row && p.col === col) && p.colour === piece.colour))
   }
 }
 
