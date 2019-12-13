@@ -15,7 +15,7 @@ const main = () => {
   do {
     const pieces: Piece[] = []
 
-    const piecesCount = readline.question('Enter number of pieces: ');
+    const piecesCount = readline.question('\nEnter number of pieces: ');
     for (let i = 1; i <= piecesCount; i++) {
       console.log(`\nPiece ${i}`)
       const colour = readline.question('Enter colour (W/B): ');
@@ -53,28 +53,54 @@ const getValidMoves = (piece: Piece, pieces: Piece[]) => {
 }
 
 const isValidMove = {
-  [ChessConfig.pieces.BISHOP_KEY]: (row, col, piece: Piece, pieces: Piece[]) => {
+  [ChessConfig.pieces.BISHOP_KEY]: (row, col, piece: Piece, pieces: Piece[]): boolean => {
     const onCurrentPiece = row === piece.row && col === piece.col
     const onAnotherSameColour = isValidMove.onAnotherSameColour(row, col, piece, pieces)
+    const isBehindAnotherPiece = isValidMove.isBehindAnotherPiece(row, col, piece, pieces)
 
-    return ((row - piece.row === piece.col - col) || // top left to bottom right
-      (piece.row - row === piece.col - col)) && // bottom left to top right
-      (!onAnotherSameColour && !onCurrentPiece)
+    if (onCurrentPiece || onAnotherSameColour || isBehindAnotherPiece) return false
+
+    return (row - piece.row === piece.col - col) || (piece.row - row === piece.col - col)
   },
-  [ChessConfig.pieces.KNIGHT_KEY]: (row, col, piece: Piece, pieces: Piece[]) => {
-    const rowDifference = Math.abs(row - piece.row)
-    const colDifference = Math.abs(col - piece.col)
+  [ChessConfig.pieces.KNIGHT_KEY]: (row, col, piece: Piece, pieces: Piece[]): boolean => {
     const onAnotherSameColour = isValidMove.onAnotherSameColour(row, col, piece, pieces)
 
-    return (rowDifference + colDifference === 3) &&
-      (rowDifference > 0 && colDifference > 0) &&
-      !onAnotherSameColour
+    if (onAnotherSameColour) return false
+
+    const rowDifference = Math.abs(row - piece.row)
+    const colDifference = Math.abs(col - piece.col)
+
+    return (rowDifference + colDifference === 3) && (rowDifference > 0 && colDifference > 0)
   },
-  onAnotherSameColour: (row: number, col: number, piece: Piece, pieces: Piece[]) => {
+  onAnotherSameColour: (row: number, col: number, piece: Piece, pieces: Piece[]): boolean => {
     const onCurrentPiece = row === piece.row && col === piece.col
     if (onCurrentPiece) return false
 
     return !!(pieces.find(p => (p.row === row && p.col === col) && p.colour === piece.colour))
+  },
+  isBehindAnotherPiece: (row: number, col: number, piece: Piece, pieces: Piece[]): boolean=> {
+    let currentPositionDirectionFromPiece: string
+
+    if (row <= piece.row && col <= piece.col) {
+      currentPositionDirectionFromPiece = 'SW'
+    } else if (row >= piece.row && col <= piece.col) {
+      currentPositionDirectionFromPiece = 'NW'
+    } else if (row <= piece.row && col >= piece.col) {
+      currentPositionDirectionFromPiece = 'SE'
+    } else if (row >= piece.row && col >= piece.col) {
+      currentPositionDirectionFromPiece = 'NE'
+    }
+
+    switch(currentPositionDirectionFromPiece) {
+      case 'SW':
+        return !!(pieces.find(p => (p.row < piece.row && p.col < piece.col) && (p.row > row && p.col > col)))
+      case 'NW':
+        return !!(pieces.find(p => (p.row > piece.row && p.col < piece.col) && (p.row < row && p.col > col)))
+      case 'SE':
+        return !!(pieces.find(p => (p.row < piece.row && p.col > piece.col) && (p.row > row && p.col < col)))
+      case 'NE':
+        return !!(pieces.find(p => (p.row > piece.row && p.col > piece.col) && (p.row < row && p.col < col)))
+    }
   }
 }
 
