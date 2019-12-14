@@ -171,9 +171,9 @@ export default class BishopsAndKnights {
   }
 
   private isPositionUnique(position: string): boolean {
-    const allPiecePositions = this.pieces.map((p) => p.position)
+    const positions = this.pieces.map(p => p.position)
 
-    return !allPiecePositions.includes(position)
+    return !positions.includes(position)
   }
 }
 

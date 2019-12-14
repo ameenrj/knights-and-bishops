@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsc && node dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --watchAll --verbose"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +19,7 @@
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.19.1",
     "jest": "^24.9.0",
+    "ts-jest": "^24.2.0",
     "typescript": "^3.7.3"
   },
   "dependencies": {
