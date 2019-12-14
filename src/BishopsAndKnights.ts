@@ -69,20 +69,15 @@ export default class BishopsAndKnights {
     do {
       const input = (readline.question('Enter number of pieces: ')).toLowerCase()
 
-      if (Number.isNaN(input)) {
+      if (isNaN(input)) {
         console.log('Number of pieces must be a number. Please try again.')
-        continue
-      }
-      if (input > (this.chessConfig.NUMBER_OF_FILES * this.chessConfig.NUMBER_OF_RANKS)) {
+      } else if (input > (this.chessConfig.NUMBER_OF_FILES * this.chessConfig.NUMBER_OF_RANKS)) {
         console.log('There cannot be more pieces than board space. Please try again.')
-        continue
-      }
-      if (input < 0) {
+      } else if (input < 0) {
         console.log('You cannot have a negative number of pieces. Please try again.')
-        continue
+      } else {
+        piecesCount = input
       }
-
-      piecesCount = input
     } while (!piecesCount)
 
     return piecesCount
@@ -95,10 +90,9 @@ export default class BishopsAndKnights {
 
       if (input !== 'w' && input !== 'b') {
         console.log('Colour must be White (W) or Black (B). Please try again.')
-        continue
+      } else {
+        colour = input
       }
-
-      colour = input
     } while (!colour)
 
     return colour
@@ -114,31 +108,12 @@ export default class BishopsAndKnights {
           + `or Knight (${this.KNIGHT_KEY.toUpperCase()}) `
           + `or Rook (${this.ROOK_KEY.toUpperCase()}). `
           + `Please try again.`)
-        continue
+      } else {
+        type = input
       }
-
-      type = input
     } while (!type)
 
     return type
-  }
-
-  private shouldContinue(): boolean {
-    let continueResponse
-
-    console.log()
-    do {
-      const input = (readline.question('Continue (Y/N)?: ')).toLowerCase()
-
-      if (input !== 'y' && input !== 'n') {
-        console.log('Continue response must be \'Y\' or \'N\'. Please try again.')
-        continue
-      }
-
-      continueResponse = input
-    } while (!continueResponse)
-
-    return continueResponse === 'y'
   }
 
   private getPosition(): string {
@@ -154,22 +129,15 @@ export default class BishopsAndKnights {
       if (fileAsNumber < minimumFile || fileAsNumber > this.chessConfig.NUMBER_OF_FILES) {
         console.log(`File must be between ${String.fromCharCode(minimumRank + this.BASE_ASCII_CODE)} `
           + `and ${String.fromCharCode(this.chessConfig.NUMBER_OF_FILES + this.BASE_ASCII_CODE)} inclusive. Please try again.`)
-        continue
-      }
-      if (isNaN(rank)) {
+      } else if (isNaN(rank)) {
         console.log('Rank must be a number. Please try again.')
-        continue
-      }
-      if (rank < minimumRank || rank > this.chessConfig.NUMBER_OF_RANKS) {
+      } else if (rank < minimumRank || rank > this.chessConfig.NUMBER_OF_RANKS) {
         console.log(`Rank must be between ${minimumRank} and ${this.chessConfig.NUMBER_OF_RANKS} inclusive. Please try again.`)
-        continue
-      }
-      if (!this.isPositionUnique(input)) {
+      } else if (!this.isPositionUnique(input)) {
         console.log('Pieces cannot share the same position. Please try again.')
-        continue
+      } else {
+        position = input
       }
-
-      position = input
     } while (!position)
 
     return position
@@ -179,6 +147,23 @@ export default class BishopsAndKnights {
     const positions = this.pieces.map(p => p.position)
 
     return !positions.includes(position)
+  }
+
+  private shouldContinue(): boolean {
+    let continueResponse
+
+    console.log()
+    do {
+      const input = (readline.question('Continue (Y/N)?: ')).toLowerCase()
+
+      if (input !== 'y' && input !== 'n') {
+        console.log('Continue response must be \'Y\' or \'N\'. Please try again.')
+      } else {
+        continueResponse = input
+      }
+    } while (!continueResponse)
+
+    return continueResponse === 'y'
   }
 }
 

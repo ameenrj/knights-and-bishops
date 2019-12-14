@@ -1,15 +1,17 @@
 {
   "name": "bishops-and-knights",
   "version": "1.0.0",
-  "description": "",
+  "description": "Console program to print available moves for chess pieces",
   "main": "index.js",
   "scripts": {
     "dev": "tsc && node dist/index.js",
     "test": "jest --watchAll --verbose"
   },
-  "keywords": [],
-  "author": "",
+  "author": "Ameen Ramadan-Jradi <ameen.ramadan.jradi@gmail.com>",
   "license": "ISC",
+  "dependencies": {
+    "readline-sync": "^1.4.10"
+  },
   "devDependencies": {
     "@types/jest": "^24.0.23",
     "@types/node": "^12.12.17",
@@ -21,8 +23,5 @@
     "jest": "^24.9.0",
     "ts-jest": "^24.2.0",
     "typescript": "^3.7.3"
-  },
-  "dependencies": {
-    "readline-sync": "^1.4.10"
   }
 }
