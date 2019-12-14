@@ -1,10 +1,12 @@
 import * as readline from 'readline-sync'
 import Bishop from './pieces/Bishop'
 import Knight from './pieces/Knight'
+import Rook from './pieces/Rook'
 
 export default class BishopsAndKnights {
   private readonly BISHOP_KEY = 'b'
   private readonly KNIGHT_KEY = 'n'
+  private readonly ROOK_KEY = 'r'
   private readonly BASE_ASCII_CODE = 96
 
   private chessConfig: ChessConfig
@@ -12,7 +14,8 @@ export default class BishopsAndKnights {
 
   private readonly pieceValidators: Object = {
     [this.BISHOP_KEY]: (row: number, col: number, piece: Piece, pieces: Piece[]) => Bishop.isValidMove(row, col, piece, pieces),
-    [this.KNIGHT_KEY]: (row: number, col: number, piece: Piece, pieces: Piece[]) => Knight.isValidMove(row, col, piece, pieces)
+    [this.KNIGHT_KEY]: (row: number, col: number, piece: Piece, pieces: Piece[]) => Knight.isValidMove(row, col, piece, pieces),
+    [this.ROOK_KEY]: (row: number, col: number, piece: Piece, pieces: Piece[]) => Rook.isValidMove(row, col, piece, pieces)
   }
 
   constructor(chessConfig: ChessConfig) {
@@ -104,11 +107,13 @@ export default class BishopsAndKnights {
   private getType(): string {
     let type
     do {
-      const input = (readline.question('Enter type (B/N): ')).toLowerCase()
+      const input = (readline.question('Enter type (B/N/R): ')).toLowerCase()
 
-      if (![this.BISHOP_KEY, this.KNIGHT_KEY].includes(input)) {
+      if (![this.BISHOP_KEY, this.KNIGHT_KEY, this.ROOK_KEY].includes(input)) {
         console.log(`Type must be Bishop (${this.BISHOP_KEY.toUpperCase()}) `
-          + `or Knight (${this.KNIGHT_KEY.toUpperCase()}). Please try again.`)
+          + `or Knight (${this.KNIGHT_KEY.toUpperCase()}) `
+          + `or Rook (${this.ROOK_KEY.toUpperCase()}). `
+          + `Please try again.`)
         continue
       }
 

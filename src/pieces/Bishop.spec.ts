@@ -7,7 +7,8 @@ describe('Bishop', () => {
   describe('isValidMove', () => {
 
     it('should return false if on the current piece', async() => {
-      const result = Bishop.isValidMove(3, 3, { row: 3, col: 3 } as Piece, [])
+      const piece = { row: 3, col: 3 } as Piece
+      const result = Bishop.isValidMove(3, 3, piece, [piece])
 
       expect(result).toBe(false)
     })

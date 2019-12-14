@@ -3,11 +3,10 @@ import { onSameColourPiece } from './shared'
 
 export default class Bishop {
   public static isValidMove(row: number, col: number, piece: Piece, pieces: Piece[]): boolean {
-    const onCurrentPiece = row === piece.row && col === piece.col
     const onSameColour = onSameColourPiece(row, col, piece, pieces)
     const isBehindAnotherPiece = this.isBehindAnotherPiece(row, col, piece, pieces)
 
-    if (onCurrentPiece || onSameColour || isBehindAnotherPiece) return false
+    if (onSameColour || isBehindAnotherPiece) return false
 
     return (row - piece.row === piece.col - col) || (piece.row - row === piece.col - col)
   }
